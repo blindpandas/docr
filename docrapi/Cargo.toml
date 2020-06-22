@@ -1,0 +1,11 @@
+[package]
+name = "docrapi"
+version = "0.1.0"
+authors = ["mush42 <musharraf.omer@gmail.com>"]
+edition = "2018"
+
+[dependencies]
+bindings = { path = "../bindings" }
+image = "0.13.0"
+rayon = "1.3.1"
+winrt = "0.7.0"

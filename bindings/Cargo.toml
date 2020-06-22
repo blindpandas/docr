@@ -1,0 +1,11 @@
+[package]
+name = "bindings"
+version = "0.1.0"
+authors = ["mush42 <musharraf.omer@gmail.com>"]
+edition = "2018"
+
+[dependencies]
+winrt = "0.7.0"
+
+[build-dependencies]
+winrt = "0.7.0"

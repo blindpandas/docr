@@ -1,0 +1,16 @@
+[package]
+name = "docrlib"
+version = "0.1.0"
+authors = ["mush42 <musharraf.omer@gmail.com>"]
+edition = "2018"
+
+[lib]
+name = "docrlib"
+crate-type = ["cdylib"]
+
+[dependencies]
+docrapi = { path = "../docrapi" }
+libc = "0.2.71"
+serde = "1.0.112"
+serde_json = "1.0.55"
+widestring = "0.4.2"

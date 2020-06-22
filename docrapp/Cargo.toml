@@ -1,0 +1,10 @@
+[package]
+name = "docr"
+version = "0.1.0"
+authors = ["mush42 <musharraf.omer@gmail.com>"]
+edition = "2018"
+
+[dependencies]
+docrapi = { path = "../docrapi" }
+clap = "2.33.1"
+winrt = "0.7.0"
