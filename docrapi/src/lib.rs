@@ -52,8 +52,8 @@ impl Error for DocrError {}
 impl fmt::Display for DocrError {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         let err_message = match self {
-            RuntimeError(msg, code) => format!("Windows error: {}. Code: {}.", msg, code),
-            OperationError(msg) => format!("Operation error: {}", msg),
+            RuntimeError(msg, code) => format!("Windows error: {} Code: {}.", msg, code),
+            OperationError(msg) => format!("Error: {}", msg),
         };
         write!(f, "{}", err_message)
     }
@@ -88,11 +88,11 @@ pub fn recognize_imagedata(
     Ok(recognize(language, bitmap)?)
 }
 
-pub fn recognize_image<'a>(language: &str, filename: &'a str) -> DocrResult<String> {
+pub fn recognize_image<'a>(language: &'a str, filename: &'a str) -> DocrResult<String> {
     let image = if let Ok(img) = image::open(filename) {
         img
     } else {
-        let err_msg = format!("Error opening image file: {}", filename);
+        let err_msg = format!("Failed to open image file: {}", filename);
         return Err(OperationError(err_msg));
     };
     let (width, height) = image.dimensions();
@@ -109,14 +109,14 @@ pub fn create_language_from_tag(given_tag: &str) -> DocrResult<Language> {
     } else {
         available_tags
             .into_iter()
-            .filter(|tag| tag.starts_with(&given_tag))
+            .filter(|tag| tag.starts_with(&format!("{}-", given_tag)))
             .nth(0)
     };
     match valid_tag {
         Some(tag) => Ok(Language::create_language(tag)?),
         None => {
             let err_msg = format!(
-                " Language '{}' is not supported by the OCR engine",
+                "Language '{}' is not supported by the OCR engine",
                 &given_tag
             );
             return Err(OperationError(err_msg));
@@ -147,13 +147,13 @@ fn stringify_lines(lines: Vec<String>, is_rtl: bool) -> String {
     lines.into_iter().fold(String::new(), |mut out, line| {
         if is_rtl {
             line.split_ascii_whitespace().rev().for_each(|word| {
-                out.push(' ');
                 out.push_str(word);
+                out.push(' ');
             });
         } else {
-            out.push_str(&line);
+            out.push_str(line.trim_end());
         };
-        out.push_str("\r\n");
+        out.push_str("\n");
         out
     })
 }

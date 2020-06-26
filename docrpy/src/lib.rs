@@ -4,6 +4,7 @@ use pyo3::exceptions::*;
 use pyo3::prelude::*;
 
 #[pyclass(module = "docrpy", weakref)]
+#[text_signature = "(language: str)"]
 struct DocrEngine {
     #[pyo3(get)]
     language: String,
@@ -12,9 +13,9 @@ struct DocrEngine {
 #[pymethods]
 impl DocrEngine {
     #[new]
-    fn new(lang_tag: String) -> PyResult<Self> {
-        match docr::create_language_from_tag(&lang_tag) {
-            Ok(_) => Ok(DocrEngine { language: lang_tag }),
+    fn new(language: String) -> PyResult<Self> {
+        match docr::create_language_from_tag(&language) {
+            Ok(_) => Ok(DocrEngine { language }),
             Err(e) => {
                 let err = match e {
                     docr::RuntimeError(..) => OSError::py_err(e.to_string()),
@@ -24,17 +25,21 @@ impl DocrEngine {
             }
         }
     }
-
+    /// Return a list of language tags for languages supported by this OCR engine
+    ///     DocrEngine.get_supported_languages() -> list
     #[staticmethod]
     fn get_supported_languages() -> PyResult<Vec<String>> {
-        let result = docr::get_ocr_languages();
-        if result.is_err() {
-            Err(RuntimeError::py_err("Could not get  supported languages."))
-        } else {
-            Ok(result.unwrap())
+        match docr::get_ocr_languages() {
+            Ok(value) => Ok(value),
+            Err(e) => {
+                let err_msg = format!("Could not get  supported languages. {}", e);
+                Err(RuntimeError::py_err(err_msg))
+            }
         }
     }
-
+    /// Run Optical Character Recognition (OCR) on the provided image data.
+    ///     DocrEngine.recognize(self, imagedata: bytes, width: int, height: int) -> str
+    #[text_signature = "(self, imagedata, width, height)"]
     fn recognize(&self, py: Python, imagedata: &[u8], width: i32, height: i32) -> PyResult<String> {
         py.allow_threads(|| {
             let result = docr::recognize_imagedata(&self.language, imagedata, width, height);
@@ -46,6 +51,9 @@ impl DocrEngine {
             }
         })
     }
+    /// Run OCR on the image file (supported formats: *.jpg, *.png).
+    ///     DocrEngine.recognize_image_file(self, filename: str) -> str
+    #[text_signature = "(self, filename, /)"]
     fn recognize_image_file(&self, py: Python, filename: &str) -> PyResult<String> {
         py.allow_threads(|| {
             let result = docr::recognize_image(&self.language, filename);
