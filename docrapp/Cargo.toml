@@ -7,4 +7,3 @@ edition = "2018"
 [dependencies]
 docrapi = { path = "../docrapi" }
 clap = "2.33.1"
-winrt = "0.7.0"
