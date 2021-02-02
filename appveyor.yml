@@ -24,12 +24,12 @@ environment:
     # Nightly 32-bit MSVC
     - channel: nightly
       target: i686-pc-windows-msvc
-    - python_path: "C:\python37-x64"
-    - python_path: "C:\python37"
-    - python_path: "C:\python38-x64"
-    - python_path: "C:\python38"
-    - python_path: "C:\python39-x64"
-    - python_path: "C:\python39"
+    - python_path: C:\python37-x64
+    - python_path: C:\python37
+    - python_path: C:\python38-x64
+    - python_path: C:\python38
+    - python_path: C:\python39-x64
+    - python_path: C:\python39
 
 
 ## Install Script ##
