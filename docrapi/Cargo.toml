@@ -7,4 +7,4 @@ edition = "2018"
 [dependencies]
 bindings = { path = "../bindings" }
 image = "0.13.0"
-winrt = "0.7.0"
+winrt = "0.7.2"

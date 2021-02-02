@@ -5,7 +5,7 @@ authors = ["mush42 <musharraf.omer@gmail.com>"]
 edition = "2018"
 
 [dependencies]
-winrt = "0.7.0"
+winrt = "0.7.2"
 
 [build-dependencies]
-winrt = "0.7.0"
+winrt = "0.7.2"

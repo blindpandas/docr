@@ -1,0 +1,51 @@
+# Rust needs at least Visual Studio 2013 Appveyor OS for MSVC targets.
+os: Visual Studio 2019
+
+clone_depth: 1
+
+
+branches:
+  only:
+    - master
+    - /dev.*/
+    - /release-.*/
+
+
+## Build Matrix ##
+
+environment:
+  matrix:
+    # Nightly 64-bit MSVC
+    - channel: nightly
+      target: x86_64-pc-windows-msvc
+    # Nightly 32-bit MSVC
+    - channel: nightly
+      target: i686-pc-windows-msvc
+    - python_path: "C:\python37-x64"
+    - python_path: "C:\python37"
+    - python_path: "C:\python38-x64"
+    - python_path: "C:\python38"
+    - python_path: "C:\python39-x64"
+    - python_path: "C:\python39"
+
+
+## Install Script ##
+install:
+  - appveyor DownloadFile https://win.rustup.rs/ -FileName rustup-init.exe
+  - rustup-init -yv --default-toolchain %channel% --default-host %target%
+  - set PATH=%PATH%;%USERPROFILE%\.cargo\bin
+  - rustc -vV
+  - cargo -vV
+
+## Build Script ##
+
+# Disable Appveyor's build stage. This prevents
+# the "directory does not contain a project or solution file" error.
+build: off
+
+build_script:
+    - set PATH=%python_path%;%PATH%
+    - set PATH=%python_path%\scripts;%PATH%
+    - python -m pip install -U pip
+    - python -m pip install maturin
+    - maturin build --release -i %python_path%\python.exe
