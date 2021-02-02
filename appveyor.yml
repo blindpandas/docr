@@ -14,6 +14,9 @@ branches:
 ## Build Matrix ##
 
 environment:
+  TWINE_USERNAME: __token__
+  TWINE_PASSWORD:
+    secure: /VyLLt4LPhHENae7DvnAFfNtYSFoxP34fV5t/OD4y4ivhR+ofQGNxpE92v31jv0a2bK/Lav8/OHEqG2uIrc/AtHYKqrsedo8B6+3ul+1kyFIyaT1E2j/qksAV7TXqtvB5L9xCw3cExO+XhF/cwUVk9oDJu9Z0eDgxXItjKSTySUlWqumZwcgXbNVtaU61CVKesEhayt8JStzoy1KJhnUc0dFsMegapPz3PqjHk6vlqg=
   matrix:
     # Nightly 64-bit MSVC
     - channel: nightly
@@ -48,4 +51,8 @@ build_script:
     - set PATH=%python_path%\scripts;%PATH%
     - python -m pip install -U pip
     - python -m pip install maturin
+    - cd docrpy
     - maturin build --release -i %python_path%\python.exe
+
+artifacts:
+  - path: target\wheels\*.whl
