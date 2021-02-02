@@ -36,4 +36,4 @@ def upload_wheels(c):
     if not tag_triggered:
         return print("Not a release build.\nSkipping PyPI upload process.")
     with c.cd(REPO_HOME):
-        c.run('twine upload  ".\target\wheels\*" --non-interactive --skip-existing')
+        c.run(r'twine upload  "./target/wheels/*" --non-interactive --skip-existing')
