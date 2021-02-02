@@ -1,5 +1,6 @@
 # coding: utf-8
 
+import os
 import struct
 from pathlib import Path
 from invoke import task
@@ -27,3 +28,12 @@ def build_wheels(c):
         pythons = [Path(pypath, "python.exe").resolve() for pypath in PYTHON_TARGETS[ARCH]]
         i_arg = " -i ".join(f'"{str(py)}"' for py in pythons)
         c.run(f"maturin build --release -i {i_arg}")
+
+
+@task
+def upload_wheels(c):
+    tag_triggered = os.environ.get('APPVEYOR_REPO_TAG_NAME', "").startswith("release")
+    if not tag_triggered:
+        return print("Not a release build.\nSkipping PyPI upload process.")
+    with c.cd(REPO_HOME):
+        c.run('twine upload  ".\target\wheels\*" --non-interactive --skip-existing')
