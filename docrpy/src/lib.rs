@@ -18,8 +18,8 @@ impl DocrEngine {
             Ok(_) => Ok(DocrEngine { language }),
             Err(e) => {
                 let err = match e {
-                    docr::RuntimeError(..) => OSError::py_err(e.to_string()),
-                    docr::OperationError(..) => ValueError::py_err(e.to_string()),
+                    docr::RuntimeError(..) => PyOSError::new_err(e.to_string()),
+                    docr::OperationError(..) => PyValueError::new_err(e.to_string()),
                 };
                 Err(err)
             }
@@ -33,7 +33,7 @@ impl DocrEngine {
             Ok(value) => Ok(value),
             Err(e) => {
                 let err_msg = format!("Could not get  supported languages. {}", e);
-                Err(RuntimeError::py_err(err_msg))
+                Err(PyRuntimeError::new_err(err_msg))
             }
         }
     }
@@ -45,7 +45,7 @@ impl DocrEngine {
             let result = docr::recognize_imagedata(&self.language, imagedata, width, height);
             if let Err(e) = result {
                 let err_msg = format!("Error recognizing image data. {}", e);
-                Err(OSError::py_err(err_msg))
+                Err(PyOSError::new_err(err_msg))
             } else {
                 Ok(result.unwrap())
             }
@@ -59,7 +59,7 @@ impl DocrEngine {
             let result = docr::recognize_image(&self.language, filename);
             if let Err(e) = result {
                 let err_msg = format!("Error recognizing image '{}'. {}", &filename, e);
-                Err(OSError::py_err(err_msg))
+                Err(PyOSError::new_err(err_msg))
             } else {
                 Ok(result.unwrap())
             }

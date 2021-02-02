@@ -19,11 +19,11 @@ environment:
   TWINE_PASSWORD:
     secure: /VyLLt4LPhHENae7DvnAFfNtYSFoxP34fV5t/OD4y4ivhR+ofQGNxpE92v31jv0a2bK/Lav8/OHEqG2uIrc/AtHYKqrsedo8B6+3ul+1kyFIyaT1E2j/qksAV7TXqtvB5L9xCw3cExO+XhF/cwUVk9oDJu9Z0eDgxXItjKSTySUlWqumZwcgXbNVtaU61CVKesEhayt8JStzoy1KJhnUc0dFsMegapPz3PqjHk6vlqg=
   matrix:
-    # Nightly 64-bit MSVC
-    - channel: nightly
+    # Stable 64-bit MSVC
+    - channel: stable
       target: x86_64-pc-windows-msvc
-    # Nightly 32-bit MSVC
-    - channel: nightly
+    # Stable 32-bit MSVC
+    - channel: stable
       target: i686-pc-windows-msvc
 
 
@@ -31,6 +31,7 @@ environment:
 install:
   - appveyor DownloadFile https://win.rustup.rs/ -FileName rustup-init.exe
   - rustup-init -yv --default-toolchain %channel% --default-host %target%
+  - rustup component add rustfmt
   - set PATH=%PATH%;%USERPROFILE%\.cargo\bin
   - rustc -vV
   - cargo -vV

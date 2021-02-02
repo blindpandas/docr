@@ -1,16 +1,16 @@
 [package]
 name = "docrpy"
-version = "0.1.0"
+version = "0.1.1"
 authors = ["mush42 <musharraf.omer@gmail.com>"]
 edition = "2018"
 
 [lib]
 name = "docrpy"
-crate-type = ["cdylib"]
+crate-type = ["cdylib", "rlib"]
 
 [dependencies]
 docrapi = { path = "../docrapi" }
 
 [dependencies.pyo3]
-version = "0.10.1"
+version = "0.13.1"
 features = ["extension-module"]
