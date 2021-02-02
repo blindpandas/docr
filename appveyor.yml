@@ -22,9 +22,11 @@ environment:
     # Stable 64-bit MSVC
     - channel: stable
       target: x86_64-pc-windows-msvc
+      python_interpreter: C:\python39-x64\python.exe
     # Stable 32-bit MSVC
     - channel: stable
       target: i686-pc-windows-msvc
+      python_interpreter: C:\python39\python.exe
 
 
 ## Install Script ##
@@ -43,7 +45,7 @@ install:
 build: off
 
 build_script:
-    - C:\python39-x64\python.exe -m venv .venv
+    - call %python_interpreter% -m venv .venv
     - call ".venv\Scripts\activate.bat"
     - python -m pip install -U pip
     - pip install maturin
