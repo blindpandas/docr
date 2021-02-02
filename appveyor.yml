@@ -41,11 +41,11 @@ install:
 build: off
 
 build_script:
-    - set PATH=%python_path%;%PATH%
-    - set PATH=%python_path%\scripts;%PATH%
+    - C:\python39-x64\python.exe -m venv .venv
+    - call ".venv\Scripts\activate.bat"
     - python -m pip install -U pip
-    - python -m pip install maturin
-    - python -m pip install invoke
+    - pip install maturin
+    - pip install invoke
     - invoke build-wheels
 
 artifacts:
