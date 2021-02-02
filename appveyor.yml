@@ -54,3 +54,11 @@ build_script:
 
 artifacts:
   - path: target\wheels\*.whl
+
+on_success:
+ - ps: |
+    if ($env:APPVEYOR_REPO_TAG_NAME -and $env:APPVEYOR_REPO_TAG_NAME.StartsWith("release-")) {
+        .venv\Scripts\activate.ps1
+        python -m pip install twine
+        twine upload  ".\target\wheels\*" --non-interactive --skip-existing
+    }
