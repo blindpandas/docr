@@ -13,11 +13,13 @@ PYTHON_TARGETS = {
         r"C:\python37",
         r"C:\python38",
         r"C:\python39",
+        r"C:\python310",
     ],
     "x64": [
         r"C:\python37-x64",
         r"C:\python38-x64",
         r"C:\python39-x64",
+        r"C:\python310-x64",
     ]
 }
 
