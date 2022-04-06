@@ -28,6 +28,17 @@ def get_python_path(py_ident):
 
 
 @task
+def build_all(c, release=False, strip=False):
+    c.run(" ".join([
+        "cargo",
+        "build",
+        "--all",
+        "--release" if release else "",
+        "--strip" if strip else "",
+    ]))
+
+
+@task
 def build_wheels(c, release=False, strip=False):
     i_args = {
         f'"{py_path}"': "i686-pc-windows-msvc" if ident.endswith("32") else "x86_64-pc-windows-msvc"
@@ -46,6 +57,16 @@ def build_wheels(c, release=False, strip=False):
                 build_command,
                 env={'CARGO_BUILD_TARGET': arch}
             )
+
+
+@task
+def copy_artifacts(c, release=False):
+    print("Copying artifacts to dist folder...")
+    REPO_HOME.joinpath("dist").mkdir(parents=True, exist_ok=True)
+    subfolder = 'release' if release else 'debug'
+    c.run(f"cp ./target/{subfolder}/*.exe ./dist")
+    c.run(f"cp ./target/{subfolder}/*lib.dll ./dist")
+    c.run("cp ./target/wheels/*.whl ./dist")
 
 
 @task
