@@ -1,0 +1,39 @@
+name: Build DOCR
+
+on:
+  push:
+    tags: ["v*", "dev*", "try*"]
+
+env:
+  PYTHONIOENCODING: utf-8
+  TWINE_USERNAME: __token__
+  TWINE_PASSWORD: ${{ secrets.PyPI }}
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Cargo check
+        run: cargo check --verbose
+      - name: Cargo test
+        run: cargo test --verbose
+      - name: setup python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.9'
+          architecture: 'x64'
+      - name: Update pip
+        run: python -m pip install --upgrade pip setuptools wheel
+      - name: Install dependencies
+        run: python -m pip install invoke twine
+      - name: Build python wheels
+        run: python -m invoke build-wheels
+      - name: Publish distribution 📦 to PyPI
+        if: startsWith(github.ref, 'refs/tags')
+        run: python -m invoke upload-wheels
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          path: target/wheels/*.whl

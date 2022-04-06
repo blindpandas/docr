@@ -1,23 +1,23 @@
-use clap::{App, Arg};
+use clap::{Command, Arg};
 use docrapi::*;
 use std::process;
 
 fn main() {
-    let matches = App::new("Docr")
+    let matches = Command::new("Docr")
         .version("0.1")
         .author("Musharraf Omer <ibnomer2011@hotmail.com>")
         .about("Converts images to text using optical character recognition (OCR).")
         .arg(
-            Arg::with_name("FILENAME")
+            Arg::new("FILENAME")
                 .required(true)
                 .index(1)
                 .help("File to recognize. Supported files include images [*.jpg, *.png]"),
         )
         .arg(
-            Arg::with_name("language")
+            Arg::new("language")
                 .help("OCR language")
                 .long("lang")
-                .short("l")
+                .short('l')
                 .default_value("en"),
         )
         .get_matches();

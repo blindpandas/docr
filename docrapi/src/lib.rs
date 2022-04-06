@@ -1,10 +1,13 @@
-use bindings::windows::globalization::*;
-use bindings::windows::graphics::imaging::*;
-use bindings::windows::media::ocr::*;
-use bindings::windows::security::cryptography::*;
-use image::GenericImage;
 use std::error::Error;
 use std::fmt;
+use image::GenericImageView;
+use windows::{
+    Globalization::{Language, LanguageLayoutDirection},
+    Graphics::Imaging::{SoftwareBitmap, BitmapPixelFormat},
+    Media::Ocr::OcrEngine,
+    Security::Cryptography::CryptographicBuffer
+};
+
 
 #[cfg(test)]
 mod tests {
@@ -43,7 +46,7 @@ pub use DocrError::{OperationError, RuntimeError};
 
 #[derive(Debug)]
 pub enum DocrError {
-    RuntimeError(String, u32),
+    RuntimeError(String, i32),
     OperationError(String),
 }
 
@@ -59,17 +62,17 @@ impl fmt::Display for DocrError {
     }
 }
 
-impl From<winrt::Error> for DocrError {
-    fn from(error: winrt::Error) -> Self {
-        RuntimeError(error.message(), error.code().0)
+impl From<windows::core::Error> for DocrError {
+    fn from(error: windows::core::Error) -> Self {
+        RuntimeError(error.message().to_string(), error.code().0)
     }
 }
 
 pub fn get_ocr_languages() -> DocrResult<Vec<String>> {
-    let lang_tags: Vec<String> = OcrEngine::available_recognizer_languages()?
+    let lang_tags: Vec<String> = OcrEngine::AvailableRecognizerLanguages()?
         .into_iter()
-        .map(|lang| lang.language_tag().unwrap())
-        .map(|tag| String::from(tag))
+        .map(|lang| lang.LanguageTag().unwrap())
+        .map(|tag| tag.to_string())
         .map(|tag| tag.to_ascii_lowercase())
         .collect();
     Ok(lang_tags)
@@ -82,8 +85,8 @@ pub fn recognize_imagedata(
     height: i32,
 ) -> DocrResult<String> {
     let bitmap = {
-        let ibuf = CryptographicBuffer::create_from_byte_array(imagedata)?;
-        SoftwareBitmap::create_copy_from_buffer(ibuf, BitmapPixelFormat::Bgra8, width, height)?
+        let ibuf = CryptographicBuffer::CreateFromByteArray(imagedata)?;
+        SoftwareBitmap::CreateCopyFromBuffer(ibuf, BitmapPixelFormat::Bgra8, width, height)?
     };
     Ok(recognize(language, bitmap)?)
 }
@@ -96,7 +99,7 @@ pub fn recognize_image<'a>(language: &'a str, filename: &'a str) -> DocrResult<S
         return Err(OperationError(err_msg));
     };
     let (width, height) = image.dimensions();
-    let imagedata = image.to_rgba().into_raw();
+    let imagedata = image.to_rgba8().into_raw();
     let text = recognize_imagedata(language, &imagedata, width as i32, height as i32)?;
     Ok(text)
 }
@@ -113,7 +116,7 @@ pub fn create_language_from_tag(given_tag: &str) -> DocrResult<Language> {
             .nth(0)
     };
     match valid_tag {
-        Some(tag) => Ok(Language::create_language(tag)?),
+        Some(tag) => Ok(Language::CreateLanguage(tag)?),
         None => {
             let err_msg = format!(
                 "Language '{}' is not supported by the OCR engine",
@@ -126,20 +129,20 @@ pub fn create_language_from_tag(given_tag: &str) -> DocrResult<Language> {
 
 fn create_engine(lang_tag: &str) -> DocrResult<OcrEngine> {
     let lang = create_language_from_tag(lang_tag)?;
-    Ok(OcrEngine::try_create_from_language(lang)?)
+    Ok(OcrEngine::TryCreateFromLanguage(lang)?)
 }
 
 fn recognize(language: &str, bitmap: SoftwareBitmap) -> DocrResult<String> {
     let engine = create_engine(language)?;
     let lines: Vec<_> = engine
-        .recognize_async(bitmap)?
+        .RecognizeAsync(bitmap)?
         .get()?
-        .lines()?
+        .Lines()?
         .into_iter()
-        .map(|line| line.text().unwrap())
-        .map(|hstr| String::from(hstr))
+        .map(|line| line.Text().unwrap())
+        .map(|hstr| hstr.to_string())
         .collect();
-    let is_rtl = engine.recognizer_language()?.layout_direction()? == LanguageLayoutDirection::Rtl;
+    let is_rtl = engine.RecognizerLanguage()?.LayoutDirection()? == LanguageLayoutDirection::Rtl;
     Ok(stringify_lines(lines, is_rtl))
 }
 

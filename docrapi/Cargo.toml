@@ -1,10 +1,21 @@
 [package]
 name = "docrapi"
-version = "0.1.0"
+version = "0.2.0"
 authors = ["mush42 <musharraf.omer@gmail.com>"]
-edition = "2018"
+edition = "2021"
 
 [dependencies]
-bindings = { path = "../bindings" }
-image = "0.13.0"
-winrt = "0.7.2"
+image = "0.24.1"
+
+[dependencies.windows]
+version = "0.35.0"
+features = [
+    "alloc",
+    "Globalization",
+    "Security_Cryptography",
+    "Media_Ocr", 
+    "Graphics_Imaging", 
+    "Storage_Streams", 
+    "Foundation",
+    "Foundation_Collections",
+]
