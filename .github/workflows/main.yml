@@ -2,7 +2,8 @@ name: Build DOCR
 
 on:
   push:
-    tags: ["v*", "dev*", "try*"]
+    - branches: [main]
+    - tags: ["v*", "dev*", "try*"]
 
 env:
   PYTHONIOENCODING: utf-8
@@ -20,10 +21,10 @@ jobs:
       - name: Cargo test
         run: cargo test --verbose
       - name: setup python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v3
         with:
-          python-version: '3.9'
-          architecture: 'x64'
+          python-version: ['3.8', '3.9', '3.10']
+          architecture: ['x64', 'x86']
       - name: Update pip
         run: python -m pip install --upgrade pip setuptools wheel
       - name: Install dependencies
@@ -40,4 +41,4 @@ jobs:
       - name: Upload artifacts
         uses: actions/upload-artifact@v2
         with:
-          path: target/wheels/*.whl
+          path: ./dist/*.*
