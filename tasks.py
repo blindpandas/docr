@@ -28,13 +28,12 @@ def get_python_path(py_ident):
 
 
 @task
-def build_all(c, release=False, strip=False):
+def build_all(c, release=False):
     c.run(" ".join([
         "cargo",
         "build",
         "--all",
         "--release" if release else "",
-        "--strip" if strip else "",
     ]))
 
 

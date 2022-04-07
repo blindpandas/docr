@@ -30,7 +30,7 @@ jobs:
       - name: Install dependencies
         run: python -m pip install invoke twine
       - name: Build binaries
-        run: python -m invoke build-all --release --strip
+        run: python -m invoke build-all --release
       - name: Build python wheels
         run: python -m invoke build-wheels --release --strip
       - name: Copy artifacts
