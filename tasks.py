@@ -35,6 +35,7 @@ def build_all(c, release=False):
         "--all",
         "--release" if release else "",
     ]))
+    print("Build all completed")
 
 
 @task
