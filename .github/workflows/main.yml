@@ -2,8 +2,8 @@ name: Build DOCR
 
 on:
   push:
-    - branches: [main]
-    - tags: ["v*", "dev*", "try*"]
+    branches: [main]
+    tags: ["v*", "dev*", "try*"]
 
 env:
   PYTHONIOENCODING: utf-8
