@@ -6,3 +6,5 @@ members = [
     "docrpy",
     "docrapp"
 ]
+
+resolver = "2"

@@ -10,7 +10,7 @@ crate-type = ["cdylib"]
 
 [dependencies]
 docrapi = { path = "../docrapi" }
-libc = "0.2.71"
-serde = "1.0.112"
-serde_json = "1.0.55"
-widestring = "0.4.2"
+libc = "0.2.158"
+serde = "1.0.210"
+serde_json = "1.0.128"
+widestring = "0.4.3"

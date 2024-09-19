@@ -6,4 +6,4 @@ edition = "2021"
 
 [dependencies]
 docrapi = { path = "../docrapi" }
-clap = "3.1.8"
+clap = "3.2.25"
