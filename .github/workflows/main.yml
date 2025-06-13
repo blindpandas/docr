@@ -15,7 +15,7 @@ jobs:
     runs-on: windows-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
       - name: Cargo check
         run: cargo check --verbose
       - name: Cargo test
@@ -39,6 +39,6 @@ jobs:
         if: startsWith(github.ref, 'refs/tags')
         run: python -m invoke upload-wheels
       - name: Upload artifacts
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           path: ./dist/*.*
