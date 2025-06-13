@@ -1,8 +1,8 @@
 [package]
 name = "docrlib"
-version = "0.2.0"
+version = "0.3.0"
 authors = ["mush42 <musharraf.omer@gmail.com>"]
-edition = "2021"
+edition = "2024"
 
 [lib]
 name = "docrlib"
@@ -10,7 +10,7 @@ crate-type = ["cdylib"]
 
 [dependencies]
 docrapi = { path = "../docrapi" }
-libc = "0.2.158"
-serde = "1.0.210"
-serde_json = "1.0.128"
+libc = "0.2.173"
+serde = "1.0.219"
+serde_json = "1.0.140"
 widestring = "0.4.3"
