@@ -1,13 +1,12 @@
+use image::GenericImageView;
 use std::error::Error;
 use std::fmt;
-use image::GenericImageView;
 use windows::{
     Globalization::{Language, LanguageLayoutDirection},
-    Graphics::Imaging::{SoftwareBitmap, BitmapPixelFormat},
+    Graphics::Imaging::{BitmapPixelFormat, SoftwareBitmap},
     Media::Ocr::OcrEngine,
-    Security::Cryptography::CryptographicBuffer
+    Security::Cryptography::CryptographicBuffer,
 };
-
 
 #[cfg(test)]
 mod tests {

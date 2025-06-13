@@ -2,8 +2,7 @@ use docrapi as docr;
 use pyo3::exceptions::*;
 use pyo3::prelude::*;
 
-#[pyclass(module = "docrpy", weakref)]
-#[pyo3(text_signature = "(language: str)")]
+#[pyclass(frozen, module = "docrpy", weakref)]
 struct DocrEngine {
     #[pyo3(get)]
     language: String,
@@ -24,9 +23,11 @@ impl DocrEngine {
             }
         }
     }
+
     fn __repr__(&self) -> PyResult<String> {
         Ok(format!("DocrEngine(language='{}')", &self.language))
     }
+
     /// Return a list of language tags for languages supported by this OCR engine
     ///     DocrEngine.get_supported_languages() -> list
     #[staticmethod]
@@ -39,6 +40,7 @@ impl DocrEngine {
             }
         }
     }
+
     /// Run Optical Character Recognition (OCR) on the provided image data.
     ///     DocrEngine.recognize(self, imagedata: bytes, width: int, height: int) -> str
     #[pyo3(text_signature = "(self, imagedata, width, height)")]
@@ -53,6 +55,7 @@ impl DocrEngine {
             }
         })
     }
+
     /// Run OCR on the image file (supported formats: *.jpg, *.png).
     ///     DocrEngine.recognize_image_file(self, filename: str) -> str
     #[pyo3(text_signature = "(self, filename, /)")]
@@ -70,7 +73,7 @@ impl DocrEngine {
 }
 
 #[pymodule]
-fn docrpy(_py: Python, m: &PyModule) -> PyResult<()> {
+fn docrpy(m: &Bound<'_, PyModule>) -> PyResult<()> {
     m.add_class::<DocrEngine>()?;
     Ok(())
 }

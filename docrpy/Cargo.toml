@@ -12,5 +12,5 @@ name = "docrpy"
 crate-type = ["cdylib", "rlib"]
 
 [dependencies.pyo3]
-version = "0.16.6"
+version = "0.25.0"
 features = ["extension-module"]
