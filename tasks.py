@@ -9,7 +9,7 @@ from pathlib import Path
 REPO_HOME = Path.cwd()
 PYTHON_TARGETS = [
     f"3.{x}-{arch}"
-    for x in range(8, 11)
+    for x in range(9, 12)
     for arch in ("32", "64")
 ]
 
