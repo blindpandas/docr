@@ -5,7 +5,7 @@ use std::os::raw::{c_char, c_uchar, c_ulong};
 use std::slice;
 use widestring::U16CString;
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn get_recognizable_languages(out_ptr: *mut wchar_t) -> i32 {
     match get_ocr_languages() {
         Ok(langs) => {
@@ -17,7 +17,7 @@ pub extern "C" fn get_recognizable_languages(out_ptr: *mut wchar_t) -> i32 {
     }
 }
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn recognize_image(
     lang_ptr: *const c_char,
     buf_ptr: *const c_uchar,
@@ -45,9 +45,11 @@ pub extern "C" fn recognize_image(
 }
 
 unsafe fn write_unicode_to_buffer(source_str: &str, out_ptr: *mut wchar_t, default_value: &str) {
-    let buf = U16CString::from_str(source_str)
-        .unwrap_or_else(|_| U16CString::from_str_unchecked(default_value));
-    out_ptr.copy_from_nonoverlapping(buf.as_ptr(), buf.len());
+    unsafe {
+        let buf = U16CString::from_str(source_str)
+            .unwrap_or_else(|_| U16CString::from_str_unchecked(default_value));
+        out_ptr.copy_from_nonoverlapping(buf.as_ptr(), buf.len());
+    }
 }
 
 fn get_error_code(err: DocrError) -> i32 {
